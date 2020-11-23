@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+}
+
+body {
+  background-color: #f5f6fa;
+}
+
+.app_header{
+  margin: auto;
+  width: 50%;
+  text-align: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.app_stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 100px;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+.app_addCase {
+  margin-top: 50px;
+  justify-content: center;
+  display: flex;
+}
