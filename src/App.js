@@ -8,6 +8,7 @@ import {
 import React, {useEffect ,useState} from  "react";
 import InfoPanel from './InfoPanel';
 import AddCase from"./AddCase";
+import UpdateCase from "./updateCase";
 import Chart from "./chart";
 import axios from 'axios';
 
@@ -18,41 +19,45 @@ function App() {
     "Kennesaw", "Marietta"
   ]);
   const [currentCampus, setCurrentCampus] = useState("Both_Campuses");
-  const [test, setTest] = useState();
+  const [studentInfectedCnt, setStudentInfected] = useState(0);
+  const [facultyInfectedCnt, setFacultyInfected] = useState(0);
+ 
 
   const selectCampus = (e) => {
     const currentCampus = e.target.value;
     setCurrentCampus(currentCampus);
   }
+  const getData = (url, setData) => {
+    axios.get(url).then(res => {
+      var amount = Object.keys(res.data).length;
+      console.log("Result", Object.keys(res.data).length);
+      setData(amount);
+    });
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-    const result = await axios.get(
-      "http://localhost:9000/api",
-      );
-        setTest(result.data);
-    }
-    fetchData();
+      getData("https://us-central1-ksucovidtracker.cloudfunctions.net/getStudentInfectedCases",setStudentInfected);
+      getData("https://us-central1-ksucovidtracker.cloudfunctions.net/getFacultyInfectedCases",setFacultyInfected);
   }, []);
 
-  console.log("test", test)
 
   return (
     <div className="app">
 
       {/*Header*/}
       <div className="app_header">
-      <p className="App-intro">{test}</p>
       <h1>KSU Covid-19 Tracker</h1>
       </div>
         
       {/*Add Case*/}
       <div className="app_stats">
         {/*Infected Panel*/}
-        <InfoPanel title="Infected" group1_cases={10} group2_cases={30} total={1000}></InfoPanel>
+        <InfoPanel title="Infected" group1_title={'Student'} group2_title={'Faculty'} group1_cases={100+studentInfectedCnt}
+         group2_cases={100+facultyInfectedCnt} total={studentInfectedCnt + facultyInfectedCnt}></InfoPanel>
         {/*Recovered Panel*/}
-        <InfoPanel title="Recovered" group1_cases={10} group2_cases={30} total={5000}></InfoPanel>
+        <InfoPanel title="Recovered" group1_title={'Student'} group2_title={'Faculty'} group1_cases={1000} group2_cases={30} total={5000}></InfoPanel>
         {/*Campus Specific Cases*/}
-        <InfoPanel title="Campus Cases" group1_cases={10} group2_cases={30} total={30}></InfoPanel>
+        <InfoPanel title="Infected Campus Cases" group1_title={'Kennesaw'} group2_title={'Marietta'} group1_cases={10} group2_cases={30} total={30}></InfoPanel>
       </div>
 
       {/*Selection Dropdown*/}
@@ -66,6 +71,7 @@ function App() {
           </Select>
         </FormControl>
         <AddCase></AddCase>
+        <UpdateCase></UpdateCase>
       </div>
 
       {/*Chart*/}

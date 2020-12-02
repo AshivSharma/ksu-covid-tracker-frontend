@@ -13,6 +13,8 @@ import {
     InputLabel
   } from  "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -30,10 +32,15 @@ export default function FormDialog() {
 
   const handleClose = () => {
     setOpen(false);
+    setType('');
+    setGender('');
+    setCampus('');
+    setID('');
   };
 
   const [type, setType] = React.useState('');
   const [campus, setCampus] = React.useState('');
+  const [gender, setGender] = React.useState('');
   const [id, setID] = React.useState('');
 
 
@@ -44,10 +51,26 @@ export default function FormDialog() {
   const changeCampus = (event) => {
     setCampus(event.target.value);
   };
+  const changeGender = (event) => {
+    setGender(event.target.value);
+  };
   const changeID = (event) => {
     setID(event.target.value);
   };
 
+  const addCaseToDB = () => {
+      axios.post("https://us-central1-ksucovidtracker.cloudfunctions.net/user", {
+        type: type,
+        gender: gender,
+        campus: campus,
+        ksuID: id,
+        isInfected: true
+      }).then(function(res){
+        console.log("Created", res);
+      });
+      console.log("Data: ", type, " ", campus, " ", gender, " ", id);
+      handleClose();
+  }
 
   return (
     <div>
@@ -67,12 +90,25 @@ export default function FormDialog() {
             id="demo-simple-select-outlined"
             value={type}
             onChange={changeType}
-            label="Age"
             >
             <MenuItem value={'Student'}>Student</MenuItem>
             <MenuItem value={'Faculty'}>Faculty</MenuItem>
             </Select>
           </FormControl>
+
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-outlined-label">Gender</InputLabel>
+            <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={gender}
+            onChange={changeGender}
+            >
+            <MenuItem value={'Male'}>Male</MenuItem>
+            <MenuItem value={'Female'}>Female</MenuItem>
+            </Select>
+          </FormControl>
+
 
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="demo-simple-select-outlined-label">Campus</InputLabel>
@@ -81,10 +117,9 @@ export default function FormDialog() {
             id="demo-simple-select-outlined"
             value={campus}
             onChange={changeCampus}
-            label="Age"
             >
-            <MenuItem value={'Student'}>Kennesaw</MenuItem>
-            <MenuItem value={'Faculty'}>Marietta</MenuItem>
+            <MenuItem value={'Kennesaw'}>Kennesaw</MenuItem>
+            <MenuItem value={'Marietta'}>Marietta</MenuItem>
             </Select>
           </FormControl>
 
@@ -94,13 +129,15 @@ export default function FormDialog() {
             id="name"
             label="Student/Faculty ID"
             type="id"
+            value={id}
+            onChange={changeID}
           />
 
         <DialogActions style={{marginTop: "100px"}}>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={addCaseToDB} color="primary">
             Add
           </Button>
         </DialogActions>
