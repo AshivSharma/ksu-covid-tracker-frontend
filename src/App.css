@@ -3,8 +3,9 @@
 }
 
 body {
-  background-color: #f5f6fa;
+  background: #4ca1af;   background: -webkit-linear-gradient(to bottom, #c4e0e5, #c4e0e5);   background: linear-gradient(to bottom, #c4e0e5, #c4e0e5);
 }
+
 
 .app_header{
   margin: auto;
@@ -27,4 +28,18 @@ body {
   margin-top: 50px;
   justify-content: center;
   display: flex;
+}
+.app_dropdown {
+  position: relative;
+  left: 640px;
+  margin-top: 7px;
+}
+
+.app_addCase {
+  margin-top: 50px;
+  justify-content: center;
+  display: flex;
+}
+.app_addCase > div {
+  margin: 6px;
 }

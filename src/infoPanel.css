@@ -7,3 +7,9 @@
 .infoPanel:not(:last-child){
     margin-right: 15px;
 }
+.infoPanel:hover
+{
+    transition: 350ms transform ease-in;
+    transition: 200ms transform ease-out;
+    transform: scale(1.08);
+}

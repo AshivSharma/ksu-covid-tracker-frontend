@@ -14,6 +14,8 @@ import {
   } from  "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,10 +27,12 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [toaster, setToaster] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
 
   const handleClose = () => {
     setOpen(false);
@@ -57,9 +61,10 @@ export default function FormDialog() {
   const changeID = (event) => {
     setID(event.target.value);
   };
-
-  const addCaseToDB = () => {
-      axios.post("https://us-central1-ksucovidtracker.cloudfunctions.net/user", {
+ 
+  const addCaseToDB = async () => {
+    if(type && gender && campus && id) {
+      await axios.post("https://us-central1-ksucovidtracker.cloudfunctions.net/user", {
         type: type,
         gender: gender,
         campus: campus,
@@ -70,11 +75,16 @@ export default function FormDialog() {
       });
       console.log("Data: ", type, " ", campus, " ", gender, " ", id);
       handleClose();
+      window.location.reload(true);
+    } else {
+      alert("Please fill out all of the information below.");
+
+    }
   }
 
   return (
     <div>
-      <Button variant="contained" color="default" onClick={handleClickOpen}>
+      <Button variant="outlined" color="secondary" onClick={handleClickOpen}>
         Add Case
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -132,7 +142,6 @@ export default function FormDialog() {
             value={id}
             onChange={changeID}
           />
-
         <DialogActions style={{marginTop: "100px"}}>
           <Button onClick={handleClose} color="primary">
             Cancel

@@ -25,9 +25,11 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [ids, setIDs] = React.useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
+    setCurrentID('');
   };
 
   const handleClose = () => {
@@ -39,9 +41,22 @@ export default function FormDialog() {
   const changeID = (event) => {
     setCurrentID(event.target.value);
   };
+  const getID = () => {
+    axios.get("https://us-central1-ksucovidtracker.cloudfunctions.net/user")
+    .then(res => {
+        setIDs(res.data);
+    });
+    ids.forEach(id => {
+        if(id["ksuID"] == currentID){
+            var key = id["id"];
+            console.log(key);
+            updateInfectedStatus(key);
+        }
+    });
+}
 
-  const updateInfectedStatus = () => {
-      axios.put(`https://us-central1-ksucovidtracker.cloudfunctions.net/user/${currentID}`, {
+  const updateInfectedStatus = (key) => {
+      axios.put(`https://us-central1-ksucovidtracker.cloudfunctions.net/user/${key}`, {
         isInfected: false
       }).then(function(res){
         console.log("Updated", res);
@@ -75,7 +90,7 @@ export default function FormDialog() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={updateInfectedStatus} color="primary">
+          <Button onClick={getID} color="primary">
             Update
           </Button>
         </DialogActions>

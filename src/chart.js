@@ -3,7 +3,7 @@ import {Bar} from 'react-chartjs-2';
 
 const state = {
   labels: ['January', 'February', 'March',
-           'April', 'May'],
+           'April', 'May', 'June', 'July'],
   datasets: [
     {
       label: 'Covid-19 Cases',
